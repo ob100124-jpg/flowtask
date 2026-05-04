@@ -4,23 +4,6 @@
 > **Deadline:** 20 May 2026  
  
 
----
-
-## 📌 Table of Contents
-
-- [About the Project](#about-the-project)
-- [Tech Stack](#tech-stack)
-- [Team & Feature Assignments](#team--feature-assignments)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [Git Workflow](#git-workflow)
-- [Branch Strategy](#branch-strategy)
-- [Commit Convention](#commit-convention)
-- [API Overview](#api-overview)
-- [Environment Variables](#environment-variables)
-- [Deliverables](#deliverables)
-
----
 
 ## 📖 About the Project
 
