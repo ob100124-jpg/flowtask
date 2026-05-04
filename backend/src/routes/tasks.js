@@ -1,0 +1,21 @@
+const express = require('express');
+const router = express.Router();
+const {
+  getTasks,
+  createTask,
+  updateTask,
+  deleteTask,
+  updateTaskStatus
+} = require('../controllers/taskController');
+const auth = require('../middlewares/authMiddleware');
+
+// Routes CRUD
+router.get('/projects/:id/tasks', auth, getTasks);
+router.post('/tasks', auth, createTask);
+router.put('/tasks/:id', auth, updateTask);
+router.delete('/tasks/:id', auth, deleteTask);
+
+// PATCH - update status only
+router.patch('/tasks/:id/status', auth, updateTaskStatus);
+
+module.exports = router;
