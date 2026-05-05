@@ -62,11 +62,37 @@ const updateTaskStatus = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+// GET - jib tasks dyal user connecté fqt
+const getMyTasks = async (req, res) => {
+  try {
+    const tasks = await Task.find({ 
+      assignedTo: req.user.id 
+    }).populate('assignedTo', 'nom email');
+    res.json(tasks);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
+// PUT - assign task l membre
+const assignTask = async (req, res) => {
+  try {
+    const task = await Task.findByIdAndUpdate(
+      req.params.id,
+      { assignedTo: req.body.userId },
+      { new: true }
+    ).populate('assignedTo', 'nom email');
+    res.json(task);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
 module.exports = {
   getTasks,
   createTask,
   updateTask,
   deleteTask,
-  updateTaskStatus
+  updateTaskStatus,
+  getMyTasks,
+  assignTask
 };

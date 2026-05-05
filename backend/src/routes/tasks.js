@@ -5,7 +5,9 @@ const {
   createTask,
   updateTask,
   deleteTask,
-  updateTaskStatus
+  updateTaskStatus,
+  getMyTasks,
+  assignTask
 } = require('../controllers/taskController');
 const auth = require('../middlewares/authMiddleware');
 
@@ -17,5 +19,9 @@ router.delete('/tasks/:id', auth, deleteTask);
 
 // PATCH - update status only
 router.patch('/tasks/:id/status', auth, updateTaskStatus);
+
+// F4 - Assignation
+router.get('/tasks/my-tasks', auth, getMyTasks);
+router.put('/tasks/:id/assign', auth, assignTask);
 
 module.exports = router;
