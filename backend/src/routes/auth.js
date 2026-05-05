@@ -2,7 +2,7 @@ const express = require('express');
 const router  = express.Router();
 const User    = require('../models/User');
 
-// POST /api/auth/register
+
 router.post('/register', async (req, res) => {
   try {
     const { fullName, email, password } = req.body;
@@ -26,7 +26,7 @@ module.exports = router;
 
 const jwt = require('jsonwebtoken');
 
-// POST /api/auth/login
+
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -43,9 +43,9 @@ router.post('/login', async (req, res) => {
 
     // 3. Générer le token JWT
     const token = jwt.sign(
-      { id: user._id, email: user.email },  // payload
-      process.env.JWT_SECRET,               // clé secrète (.env)
-      { expiresIn: process.env.JWT_EXPIRES_IN } // ex: '7d'
+      { id: user._id, email: user.email },  
+      process.env.JWT_SECRET,               
+          { expiresIn: process.env.JWT_EXPIRES_IN } 
     );
 
     res.json({ token, user: { id: user._id, fullName: user.fullName } });
@@ -55,4 +55,4 @@ router.post('/login', async (req, res) => {
   }
 });
 
-module.exports = router;        
+module.exports = router;    
