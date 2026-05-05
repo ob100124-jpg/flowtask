@@ -63,17 +63,25 @@ const updateTaskStatus = async (req, res) => {
   }
 };
 // GET - jib tasks dyal user connecté fqt
+// GET - jib tasks dyal user connecté filtré b projet
 const getMyTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({ 
-      assignedTo: req.user.id 
-    }).populate('assignedTo', 'nom email');
+    const filter = { assignedTo: req.user.id };
+    
+    // ila kayna projetId f query, zid filtre
+    if (req.query.projetId) {
+      filter.projet = req.query.projetId;
+    }
+    
+    const tasks = await Task.find(filter)
+      .populate('assignedTo', 'nom email')
+      .sort({ priorite: -1 });
+      
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
-
 // PUT - assign task l membre
 const assignTask = async (req, res) => {
   try {
