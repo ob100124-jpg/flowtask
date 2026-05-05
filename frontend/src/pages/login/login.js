@@ -25,7 +25,7 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
     const email = document.querySelector("input[name='email']").value;
     const password = document.querySelector("input[name='password']").value;
     try {
-        const response = await axios.post('http://localhost:5000/api/auth/signup', { fullname, email, password });
+        const response = await axios.post('http://localhost:5000/api/auth/register', { fullname, email, password });
        localStorage.setItem('token', response.data.token);
         alert('Signup successful! Please login.');
         document.getElementById('switchToLogin').click(); 
@@ -35,7 +35,7 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
 });
 
 //login 
-document.getElementById('loginButton').addEventListener('click', async (e) => {
+document.getElementById('loginform').addEventListener('click', async (e) => {
     e.preventDefault();
     const email = document.querySelector("input[name='email']").value;
     const password = document.querySelector("input[name='password']").value;

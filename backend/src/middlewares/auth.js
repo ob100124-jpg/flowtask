@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
     req.user = decoded; // { id, email } dispo dans la route
      next(); // continuer vers la route
   } catch {
-    return res.status(401).json({ message: 'Token invalide' });
+    return res.status(401).json({ message: 'Token invalide' });    
   }
 };
 const auth = require('../middlewares/auth');
