@@ -62,26 +62,30 @@ const updateTaskStatus = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
-// GET - jib tasks dyal user connecté fqt
-// GET - jib tasks dyal user connecté filtré b projet
+
+// GET - jib tasks dyal user connecté filtré b projet w membre
 const getMyTasks = async (req, res) => {
   try {
     const filter = { assignedTo: req.user.id };
     
-    // ila kayna projetId f query, zid filtre
     if (req.query.projetId) {
       filter.projet = req.query.projetId;
     }
     
+    if (req.query.statut) {
+      filter.statut = req.query.statut;
+    }
+
     const tasks = await Task.find(filter)
       .populate('assignedTo', 'nom email')
-      .sort({ priorite: -1 });
+      .sort({ priorite: -1, dateLimite: 1 });
       
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
 // PUT - assign task l membre
 const assignTask = async (req, res) => {
   try {
@@ -95,6 +99,7 @@ const assignTask = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
 module.exports = {
   getTasks,
   createTask,
