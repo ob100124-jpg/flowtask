@@ -1,4 +1,5 @@
 const express = require('express');
+const { validateTask } = require('../middlewares/validate');
 const router = express.Router();
 const {
   getTasks,
@@ -13,8 +14,8 @@ const auth = require('../middlewares/authMiddleware');
 
 // Routes CRUD
 router.get('/projects/:id/tasks', auth, getTasks);
-router.post('/tasks', auth, createTask);
-router.put('/tasks/:id', auth, updateTask);
+router.post('/tasks', auth, validateTask, createTask);
+router.put('/tasks/:id', auth, validateTask, updateTask);
 router.delete('/tasks/:id', auth, deleteTask);
 
 // PATCH - update status only
