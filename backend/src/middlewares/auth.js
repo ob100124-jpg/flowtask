@@ -15,10 +15,3 @@ module.exports = (req, res, next) => {
     return res.status(401).json({ message: 'Token invalide' });    
   }
 };
-const auth = require('../middlewares/auth');
-
-router.get('/projects', auth, async (req, res) => {
-    
-  const userId = req.user.id;
-
-});

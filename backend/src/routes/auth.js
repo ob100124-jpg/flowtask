@@ -1,8 +1,10 @@
 const express = require('express');
 const router  = express.Router();
+const jwt     = require('jsonwebtoken'); 
+const bcrypt  = require('bcrypt');     
 const User    = require('../models/User');
 
-
+// POST /api/auth/register
 router.post('/register', async (req, res) => {
   try {
     const { fullName, email, password } = req.body;
@@ -17,35 +19,39 @@ router.post('/register', async (req, res) => {
     await user.save();
 
     res.status(201).json({ message: 'Compte créé avec succès' });
-    } catch (err) {
+
+  } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-module.exports = router;
-
-const jwt = require('jsonwebtoken');
-
-
+// POST /api/auth/login
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
     // 1. Utilisateur existe ?
     const user = await User.findOne({ email });
-    if (!user)
+    if (!user){
+      console.log('user not found'); 
       return res.status(401).json({ message: 'Identifiants incorrects' });
+    }
+
+    console.log('user found:', user.email); 
+    console.log('password saisi:', password);
+    console.log('hash stocké:', user.password);
 
     // 2. Mot de passe correct ?
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log('isMatch:', isMatch);
     if (!isMatch)
       return res.status(401).json({ message: 'Identifiants incorrects' });
 
     // 3. Générer le token JWT
     const token = jwt.sign(
-      { id: user._id, email: user.email },  
-      process.env.JWT_SECRET,               
-          { expiresIn: process.env.JWT_EXPIRES_IN } 
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
     );
 
     res.json({ token, user: { id: user._id, fullName: user.fullName } });
@@ -55,4 +61,4 @@ router.post('/login', async (req, res) => {
   }
 });
 
-module.exports = router;    
+module.exports = router;
