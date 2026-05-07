@@ -1,0 +1,17 @@
+require('dotenv').config();
+
+const express  = require('express');
+const mongoose = require('mongoose');
+const cors     = require('cors');
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+app.use('/api/auth', require('./routes/auth')); // ← branche auth
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('MongoDB connecté ✅'))
+  .catch(err => console.error(err));
+
+app.listen(5000, () => console.log('Serveur sur le port 5000 🚀'));
