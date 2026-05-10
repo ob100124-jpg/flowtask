@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TASKFLOW</title>
+    <link rel="stylesheet" href="./login.css">
+
+</head>
+<body>
+
+    <div class="header_container">
+        <h1>Welcome to TASKFLOW</h1>
+        <p>Organize your tasks efficiently and boost your productivity!</p>
+    </div>
+    <div class="form_wrapper">
+<!--form for signup-->
+      <div class="form_container" id="signupContainer">
+           <form id="signupForm">
+               <input type="text" name="fullName" placeholder="Nom complet" required />
+               <input type="email" name="email" placeholder="Email" required />
+               <input type="password" name="password" placeholder="Mot de passe" required />
+                <button type="submit" >Sign Up</button>
+           </form>
+           <button id="switchToLogin">Already have an account? Login</button>
+        </div>
+
+<!--form for login-->
+       <div class="form_container" id="loginContainer" style="display: none;">
+           <form id="loginForm">
+               <input type="email" name="email" placeholder="Email" required />
+               <input type="password" name="password" placeholder="Mot de passe" required />
+               <button type="submit" id="loginButton">Login</button>
+           </form>
+           <button id="switchToSignup">Don't have an account? Sign Up</button>
+       </div>
+    </div>  
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> 
+    <script src="./login.js"></script>
+</body>
+</html>
