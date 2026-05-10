@@ -1,0 +1,82 @@
+body{
+    font-family: Arial, sans-serif;
+    background: #000;
+    margin: 0;
+    padding: 20px;
+}
+h1 {
+    color: #a020f0;
+  margin-bottom: 20px;
+}
+
+#btn-add-project {
+    margin: 15px 0;
+    padding: 10px 16px;
+    background-color: #800080;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#btn-add-project:hover {
+    background-color: #a020f0;
+    transform: translateY(-2px);
+}
+
+.project-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #111;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 10px rgba(160, 32, 240, 0.3); 
+}
+.project-info h3 {
+    color: #a020f0;
+    margin: 0 0 5px 0;
+}
+
+.project-info p {
+  margin: 2px 0;
+  color: #ccc;
+}
+
+.project-actions {
+  display: flex;
+  gap: 10px;
+}
+.btn-edit, .btn-delete {
+  padding: 8px 14px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-edit {
+  background: #444;
+  color: #eee;
+}
+.btn-edit:hover {
+  background: #666;
+}
+.btn-delete {
+  background: #800080;
+  color: white;
+}
+.btn-delete:hover {
+  background: #a020f0;
+}
+
+@media (max-width: 600px) {
+  .project-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .project-actions {
+    margin-top: 10px;
+  }
+}

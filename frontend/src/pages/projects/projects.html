@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECTS</title>
+    <link rel="stylesheet" href="./projects.css">
+</head>
+<body>
+<h1>PROJECTS</h1>
+
+<button id="btn-add-project">Add Project</button>
+
+<form id="project-form" style="display:none; margin-top: 20px ;">
+    <input type="text" id="title" placeholder="Project Title" required>
+    <input type="text" id="description" placeholder="Project Description" >
+    <input type="date" id="deadline">
+    <select id="status">
+        <option value="active">Active</option>
+        <option value="paused">Paused</option>
+        <option value="archived">Archived</option>
+    </select>
+    <button type="submit">Create Project</button>
+</form>
+
+<div id="project-list"></div>
+
+<script type="module" src="./projects.js"></script>
+</body>
+</html>
