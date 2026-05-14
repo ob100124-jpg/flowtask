@@ -1,12 +1,10 @@
 const validateTask = (req, res, next) => {
   const { titre, priorite, statut } = req.body;
 
-  // titre darori
   if (!titre) {
     return res.status(400).json({ message: 'Le titre est obligatoire' });
   }
 
-  // validation priorité
   const prioritesValides = ['basse', 'moyenne', 'haute'];
   if (priorite && !prioritesValides.includes(priorite)) {
     return res.status(400).json({ 
@@ -14,7 +12,6 @@ const validateTask = (req, res, next) => {
     });
   }
 
-  // validation statut
   const statutsValides = ['à faire', 'en cours', 'terminé'];
   if (statut && !statutsValides.includes(statut)) {
     return res.status(400).json({ 
