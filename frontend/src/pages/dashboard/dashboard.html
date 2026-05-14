@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>🏠 Mon Tableau de Bord</h1>
+
+        <!-- Les métriques -->
+        <div class="metrics">
+            <div class="card">
+                <h3>📋 Tâches assignées</h3>
+                <p id="tasksAssignees">...</p>
+            </div>
+            <div class="card">
+                <h3>✅ Tâches terminées</h3>
+                <p id="tasksTerminees">...</p>
+            </div>
+            <div class="card">
+                <h3>⚠️ Tâches en retard</h3>
+                <p id="tasksEnRetard">...</p>
+            </div>
+        </div>
+
+        <!-- Tasks en cours -->
+        <div class="section">
+            <h2>🔄 Tâches en cours</h2>
+            <div id="tasksEnCours"></div>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
