@@ -2,9 +2,47 @@ const Task = require('../models/Task');
 
 const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({ projet: req.params.id })
-      .populate('assignedTo', 'fullName email');
-    res.json(tasks);
+    const {
+      status,
+      priorite,
+      assignedTo,
+      search,
+      page = 1,
+      limit = 10
+    } = req.query;
+
+    const filter = { projet: req.params.id };
+
+    if (status)     filter.statut     = status;
+    if (priorite)   filter.priorite   = priorite;
+    if (assignedTo) filter.assignedTo = assignedTo;
+    if (search) {
+      filter.$or = [
+        { titre:       { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    const pageNum  = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip     = (pageNum - 1) * limitNum;
+
+    const [tasks, total] = await Promise.all([
+      Task.find(filter)
+        .populate('assignedTo', 'fullName email')
+        .sort({ priorite: -1, dateLimite: 1 })
+        .skip(skip)
+        .limit(limitNum),
+      Task.countDocuments(filter)
+    ]);
+
+    res.json({
+      data:       tasks,
+      total,
+      page:       pageNum,
+      totalPages: Math.ceil(total / limitNum)
+    });
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -14,7 +52,7 @@ const createTask = async (req, res) => {
   try {
     const task = new Task({
       ...req.body,
-      projet: req.body.projetId
+      projet: req.body.projet || req.body.projetId 
     });
     const newTask = await task.save();
     res.status(201).json(newTask);

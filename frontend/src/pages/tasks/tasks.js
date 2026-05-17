@@ -30,32 +30,36 @@ const loadTasks = async (projetId) => {
     const list = document.getElementById('tasks-list');
     list.innerHTML = '';
     
-    res.data.forEach(task => {
+     const tasks = res.data.data;
+
+    tasks.forEach(task => {
       const div = document.createElement('div');
       div.className = 'task-card';
       div.innerHTML = `
         <h3>${task.titre}</h3>
         <p>Priorité: ${task.priorite}</p>
         <p>Statut: ${task.statut}</p>
-        <p>Assigné à: ${task.assignedTo ? task.assignedTo.nom : 'Non assigné'}</p>
+        <p>Assigné à: ${task.assignedTo ? task.assignedTo.fullName : 'Non assigné'}</p>
         <button onclick="assignTask('${task._id}')">Assigner</button>
       `;
       list.appendChild(div);
     });
   } catch (err) {
-    console.error('Erreur chargement tasks:', err);
+    console.log('status:', err.response?.status);
+    console.log('data:', err.response?.data);
+    alert(JSON.stringify(err.response?.data));
   }
 };
 
 // khla9 task jdida
 const createTask = async () => {
-  const projetId = 'PROJET_ID'; // ghadi ytbadal dynamiquement
+  const projetId = localStorage.getItem('selectedProject');
   try {
     await axios.post(`${API_URL}/tasks`, {
       titre: document.getElementById('titre').value,
       priorite: document.getElementById('priorite').value,
-      assignedTo: document.getElementById('assignedTo').value,
-      projetId
+      assignedTo: document.getElementById('assignedTo').value || undefined,
+      projet: projetId
     }, {
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -68,7 +72,7 @@ const createTask = async () => {
 // assign task l membre
 const assignTask = async (taskId) => {
   const userId = document.getElementById('assignedTo').value;
-  const projetId = 'PROJET_ID';
+  const projetId = localStorage.getItem('selectedProject');
   try {
     await axios.put(`${API_URL}/tasks/${taskId}/assign`, 
       { userId },
@@ -81,7 +85,7 @@ const assignTask = async (taskId) => {
 };
 
 // load dyal page
-const projetId = new URLSearchParams(window.location.search).get('projetId');
+const projetId = localStorage.getItem('selectedProject');
 if (projetId) {
   loadMembers(projetId);
   loadTasks(projetId);

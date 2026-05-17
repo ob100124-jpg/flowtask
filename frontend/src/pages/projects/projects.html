@@ -7,11 +7,14 @@
     <link rel="stylesheet" href="./projects.css">
 </head>
 <body>
-<h1>PROJECTS</h1>
-
-<button id="btn-add-project">Add Project</button>
-
-<form id="project-form" style="display:none; margin-top: 20px ;">
+<div class="top-bar">
+    <h1>PROJECTS</h1>
+    <div class="top-buttons">
+        <button id="btn-add-project">Add Project</button>
+        <button id="btn-dashboard" onclick="window.location.href='../dashboard/dashboard.html'">Dashboard</button>
+    </div>
+</div>
+<form id="project-form" style="display: none; margin-top: 20px ;">
     <input type="text" id="title" placeholder="Project Title" required>
     <input type="text" id="description" placeholder="Project Description" >
     <input type="date" id="deadline">
@@ -23,8 +26,21 @@
     <button type="submit">Create Project</button>
 </form>
 
-<div id="project-list"></div>
+<table id="project-list">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Deadline</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="project-tbody">
+    </tbody>
+</table>
 
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script type="module" src="./projects.js"></script>
 </body>
 </html>

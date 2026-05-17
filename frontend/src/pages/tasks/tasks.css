@@ -67,3 +67,16 @@ button:hover {
     color: #666;
     margin-bottom: 5px;
 }
+.top-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    width: auto;
+    padding: 8px 16px;
+}
+
+.top-buttons button {
+    width: auto;
+    padding: 5px 10px;
+    font-size: 18px;
+}

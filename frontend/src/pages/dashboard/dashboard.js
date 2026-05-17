@@ -37,3 +37,13 @@ const loadDashboard = async () => {
 
 // load mli tftah page
 loadDashboard();
+
+document.getElementById('projectsBtn').addEventListener('click', () => {
+    window.location.href = '/frontend/src/pages/projects/projects.html';
+});
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/frontend/src/pages/login/login.html';
+});
