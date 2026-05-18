@@ -69,7 +69,6 @@ const createTask = async () => {
   }
 };
 
-// assign task l membre
 const assignTask = async (taskId) => {
   const userId = document.getElementById('assignedTo').value;
   const projetId = localStorage.getItem('selectedProject');
