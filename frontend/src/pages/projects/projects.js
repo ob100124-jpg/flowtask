@@ -1,35 +1,36 @@
-import { create } from "../../../../backend/src/models/Project";
-import {getProjects , deleteProject} from "../../services/projectsService";
-
+import { getProjects, createProject, deleteProject } from "../../services/projectsService.js";
 async function loadProjects() {
     try {
         const projects = await getProjects();
-        const list = document.getElementById('projects-list');
-        list.innerHTML = '';
+        console.log(projects);
+        const tbody = document.getElementById('project-tbody');
+        tbody.innerHTML = '';
 
         projects.forEach(p => {
-            const row = document.createElement('div');
-            row.className = 'project-row';
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>${p.titre}</td>
+        <td>${p.description || '-'}</td>
+        <td>${p.datelimite ? new Date(p.datelimite).toLocaleDateString() : 'No deadline'}</td>
+        <td>${p.status}</td>
+        <td>
+            <button class="btn-tasks">📋 Tasks</button>
+            <button class="btn-delete">🗑️ Delete</button>
+        </td>
+    `;
 
-            row.innerHTML = `
-                <div class="project-info">
-                    <h3>${p.titre}</h3>
-                    <p>${p.description || ''}</p>
-                    <p>${p.datelimite ? new Date(p.datelimite).toLocaleDateString() : 'No deadline'}</p>
-                    <p>Status: ${p.status}</p>
-                </div>
-                <div class="project-actions">
-                    <button class="btn-edit">Edit</button>
-                    <button class="btn-delete">Delete</button>
-                </div>
-            `;
-            row.querySelector('.btn-delete').addEventListener('click', async () => {
-                await deleteProject(p._id);
-                loadProjects();
-            });
+    row.querySelector('.btn-tasks').addEventListener('click', () => {
+        localStorage.setItem('selectedProject', p._id);
+        window.location.href = '/frontend/src/pages/tasks/tasks.html';
+    });
 
-            list.appendChild(row);
-        });
+    row.querySelector('.btn-delete').addEventListener('click', async () => {
+        await deleteProject(p._id);
+        loadProjects();
+    });
+
+    tbody.appendChild(row);
+});
     } catch (err) {
         console.error('Error loading projects:', err);
     } 
@@ -38,7 +39,7 @@ async function loadProjects() {
 loadProjects();
 
 document.getElementById('btn-add-project').addEventListener('click', () => {
-    document.getElementById('project-form').style.display = 'flex';
+    document.getElementById('project-form').style.display = 'block';
 });
 document.getElementById('project-form').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -50,7 +51,7 @@ document.getElementById('project-form').addEventListener('submit', async (e) => 
         status: document.getElementById('status').value
     };    
 
-    await createproject(projectData);
+    await createProject(projectData);
     document.getElementById('project-form').reset();
     document.getElementById('project-form').style.display = 'none';
     loadProjects();

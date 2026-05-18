@@ -65,3 +65,14 @@ exports.deleteProject = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+const getProjectMembers = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id)
+      .populate('members', 'fullName email');
+    res.json(project.members);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+exports.getProjectMembers = getProjectMembers;

@@ -1,4 +1,4 @@
-// toggle forms
+ // toggle forms
 document.getElementById('switchToLogin').addEventListener('click', () => {
   document.getElementById('signupContainer').style.display = 'none';
   document.getElementById('loginContainer').style.display = 'block';
@@ -28,7 +28,9 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
     alert('Compte créé ! Connecte-toi.');
     document.getElementById('switchToLogin').click();
   } catch (error) {
-    alert('Erreur : ' + error.response?.data?.message);
+    console.error(error);
+    const msg = error.response?.data?.message || "Erreur inconnue";
+    alert('Erreur : ' + msg);
   }
 });
 
@@ -42,8 +44,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
     localStorage.setItem('token', response.data.token);
     localStorage.setItem('user', JSON.stringify(response.data.user));
-    window.location.href = '/dashboard.html';
-  } catch (error) {
+    window.location.href = '/frontend/src/pages/dashboard/dashboard.html';  } catch (error) {
     alert('Erreur : ' + error.response?.data?.message);
   }
 });
