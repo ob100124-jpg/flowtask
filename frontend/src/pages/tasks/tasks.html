@@ -3,25 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tâches</title>
+    <title>Taches</title>
     <link rel="stylesheet" href="tasks.css">
 </head>
 <body>
-
-    <h1>Gestion des Tâches</h1>
+    <h1>Gestion des Taches</h1>
     <div class="top-buttons">
-        <button onclick="window.location.href='../projects/projects.html'">📁 Projets</button>
-        <button onclick="window.location.href='../dashboard/dashboard.html'">🏠 Dashboard</button>
+        <button onclick="window.location.href='../projects/projects.html'">Projets</button>
+        <button onclick="window.location.href='../dashboard/dashboard.html'">Dashboard</button>
     </div>
-</div>
     <div class="container">
 
         <!-- Formulaire création task -->
         <div class="form-section">
-            <h2>Nouvelle Tâche</h2>
-            <input type="text" id="titre" placeholder="Titre de la tâche" required>
-            
-            <!-- Menu déroulant priorité -->
+            <h2>Nouvelle Tache</h2>
+            <input type="text" id="titre" placeholder="Titre de la tache" required>
             <select id="priorite">
                 <option value="basse">Basse</option>
                 <option value="moyenne">Moyenne</option>
@@ -30,14 +26,43 @@
 
             <!-- Menu déroulant membres -->
             <select id="assignedTo">
-                <option value="">Assigner à un membre...</option>
+                <option value="">Assigner a un membre...</option>
             </select>
-
-            <button onclick="createTask()">Créer la tâche</button>
+            <button class="btn-create" onclick="createTask()">Creer la tache</button>
+        </div>
+        <div class="filter-section">
+            <h2>Filtrer les taches</h2>
+            <div class="filter-row">
+                <input type="text" id="search-input" placeholder="Rechercher par titre ou description..." class="filter-search" />
+                <select id="filter-statut">
+                    <option value="">Tous les statuts</option>
+                    <option value="a faire">A faire</option>
+                    <option value="en cours">En cours</option>
+                    <option value="termine">Termine</option>
+                </select>
+                <select id="filter-priorite">
+                    <option value="">Toutes priorites</option>
+                    <option value="basse">Basse</option>
+                    <option value="moyenne">Moyenne</option>
+                    <option value="haute">Haute</option>
+                </select>
+                <select id="filter-assignedTo">
+                    <option value="">Tous les membres</option>
+                </select>
+            </div>
+            <div class="filter-buttons">
+                <button class="btn-apply" onclick="applyFilters()">Appliquer</button>
+                <button class="btn-reset" onclick="resetFilters()">Reinitialiser</button>
+            </div>
         </div>
 
         <!-- Liste des tâches -->
         <div id="tasks-list"></div>
+        <div class="pagination">
+            <button class="btn-page" id="prev-page" onclick="prevPage()" disabled>Precedent</button>
+            <span id="page-info">Page 1</span>
+            <button class="btn-page" id="next-page" onclick="nextPage()">Suivant</button>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

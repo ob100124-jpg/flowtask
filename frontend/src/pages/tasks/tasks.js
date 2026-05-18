@@ -1,29 +1,47 @@
-const API_URL = 'http://localhost:5000/api';
-const token = localStorage.getItem('token');
+const API_URL  = "http://localhost:5000/api";
+const token    = localStorage.getItem("token");
+const projetId = localStorage.getItem("selectedProject");
 
-// jib les membres dyal projet w zidهom f menu déroulant
-const loadMembers = async (projetId) => {
+let currentPage = 1;
+const limit = 5;
+
+const loadMembers = async () => {
   try {
-    const res = await axios.get(`${API_URL}/projects/${projetId}/members`, {
-      headers: { Authorization: `Bearer ${token}` }
+    const res = await axios.get(API_URL + "/projects/" + projetId + "/members", {
+      headers: { Authorization: "Bearer " + token }
     });
-    
-    const select = document.getElementById('assignedTo');
-    res.data.forEach(member => {
-      const option = document.createElement('option');
-      option.value = member._id;
-      option.textContent = member.nom;
-      select.appendChild(option);
+    const members = res.data.data || res.data;
+    const selectCreate = document.getElementById("assignedTo");
+    const selectFilter = document.getElementById("filter-assignedTo");
+    members.forEach(function(member) {
+      const opt1 = document.createElement("option");
+      opt1.value = member._id;
+      opt1.textContent = member.fullName;
+      selectCreate.appendChild(opt1);
+      const opt2 = document.createElement("option");
+      opt2.value = member._id;
+      opt2.textContent = member.fullName;
+      selectFilter.appendChild(opt2);
     });
   } catch (err) {
-    console.error('Erreur chargement membres:', err);
+    console.error("Erreur chargement membres:", err);
   }
 };
 
-// jib tasks dyal projet
-const loadTasks = async (projetId) => {
+const loadTasks = async () => {
+  const search     = document.getElementById("search-input").value.trim();
+  const statut     = document.getElementById("filter-statut").value;
+  const priorite   = document.getElementById("filter-priorite").value;
+  const assignedTo = document.getElementById("filter-assignedTo").value;
+
+  const params = new URLSearchParams({ page: currentPage, limit: limit, _t: Date.now() });
+  if (search)     params.append("search",     search);
+  if (statut)     params.append("status",     statut);
+  if (priorite)   params.append("priorite",   priorite);
+  if (assignedTo) params.append("assignedTo", assignedTo);
+
   try {
-    const res = await axios.get(`${API_URL}/projects/${projetId}/tasks`, {
+    const res = await axios.get(API_URL + "/projects/" + projetId + "/tasks?" + params.toString(), {
       headers: { Authorization: `Bearer ${token}` }
     });
     
@@ -31,6 +49,9 @@ const loadTasks = async (projetId) => {
     list.innerHTML = '';
     
      const tasks = res.data.data;
+     const total      = res.data.total;
+     const page       = res.data.page;
+     const totalPages = res.data.totalPages;
 
     tasks.forEach(task => {
       const div = document.createElement('div');
@@ -44,48 +65,61 @@ const loadTasks = async (projetId) => {
       `;
       list.appendChild(div);
     });
+    document.getElementById("page-info").textContent =
+  "Page " + page + " / " + (totalPages || 1) + " - " + total + " tache(s)";
+document.getElementById("prev-page").disabled = page <= 1;
+document.getElementById("next-page").disabled = page >= (totalPages || 1);
   } catch (err) {
-    console.log('status:', err.response?.status);
-    console.log('data:', err.response?.data);
-    alert(JSON.stringify(err.response?.data));
+    console.log("status:", err.response && err.response.status);
+    console.log("data:",   err.response && err.response.data);
   }
 };
 
-// khla9 task jdida
+
 const createTask = async () => {
-  const projetId = localStorage.getItem('selectedProject');
+  const titre      = document.getElementById("titre").value;
+  const priorite   = document.getElementById("priorite").value;
+  const assignedTo = document.getElementById("assignedTo").value || undefined;
+  if (!titre) return alert("Titre requis");
   try {
-    await axios.post(`${API_URL}/tasks`, {
-      titre: document.getElementById('titre').value,
-      priorite: document.getElementById('priorite').value,
-      assignedTo: document.getElementById('assignedTo').value || undefined,
-      projet: projetId
-    }, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    loadTasks(projetId);
-  } catch (err) {
-    console.error('Erreur création task:', err);
-  }
+    await axios.post(API_URL + "/tasks",
+      { titre: titre, priorite: priorite, assignedTo: assignedTo, projet: projetId },
+      { headers: { Authorization: "Bearer " + token } }
+    );
+    document.getElementById("titre").value = "";
+    currentPage = 1;
+    loadTasks();  } catch (err) { console.error("Erreur creation task:", err); }
 };
+
 
 const assignTask = async (taskId) => {
-  const userId = document.getElementById('assignedTo').value;
-  const projetId = localStorage.getItem('selectedProject');
+  const userId = document.getElementById("assignedTo").value;
+  if (!userId) return alert("Selectionne un membre d abord.");
   try {
-    await axios.put(`${API_URL}/tasks/${taskId}/assign`, 
-      { userId },
-      { headers: { Authorization: `Bearer ${token}` }}
+    await axios.patch(
+      API_URL + "/tasks/" + taskId + "/assign",
+      { userId: userId },
+      { headers: { Authorization: "Bearer " + token } }
     );
-    loadTasks(projetId);
-  } catch (err) {
-    console.error('Erreur assignation:', err);
-  }
+    loadTasks();
+  } catch (err) { console.error("Erreur assignation:", err); }
 };
 
-// load dyal page
-const projetId = localStorage.getItem('selectedProject');
+const applyFilters = () => { currentPage = 1; loadTasks(); };
+
+const resetFilters = () => {
+  document.getElementById("search-input").value      = "";
+  document.getElementById("filter-statut").value     = "";
+  document.getElementById("filter-priorite").value   = "";
+  document.getElementById("filter-assignedTo").value = "";
+  currentPage = 1;
+  loadTasks();
+};
+
+const prevPage = () => { if (currentPage > 1) { currentPage--; loadTasks(); } };
+const nextPage = () => { currentPage++; loadTasks(); };
+
 if (projetId) {
-  loadMembers(projetId);
-  loadTasks(projetId);
+  loadMembers();
+  loadTasks();
 }
