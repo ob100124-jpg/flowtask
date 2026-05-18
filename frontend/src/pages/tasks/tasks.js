@@ -119,7 +119,51 @@ const resetFilters = () => {
 const prevPage = () => { if (currentPage > 1) { currentPage--; loadTasks(); } };
 const nextPage = () => { currentPage++; loadTasks(); };
 
+
+const timeAgo = (date) => {
+  const diff = Math.floor((Date.now() - new Date(date)) / 1000);
+  if (diff < 60)   return `il y a ${diff} secondes`;
+  if (diff < 3600) return `il y a ${Math.floor(diff / 60)} minutes`;
+  if (diff < 86400) return `il y a ${Math.floor(diff / 3600)} heures`;
+  return `il y a ${Math.floor(diff / 86400)} jours`;
+};
+
+const formatActivity = (activity) => {
+  const who  = activity.user?.fullName || 'Quelqu\'un';
+  const when = timeAgo(activity.createdAt);
+  switch (activity.type) {
+    case 'task_created':       return `${who} a créé la tâche "${activity.meta.taskTitle}" — ${when}`;
+    case 'task_deleted':       return `${who} a supprimé la tâche "${activity.meta.taskTitle}" — ${when}`;
+    case 'task_status_changed': return `${who} a changé le statut de "${activity.meta.taskTitle}" : ${activity.meta.from} → ${activity.meta.to} — ${when}`;
+    case 'task_assigned':      return `${who} a assigné la tâche "${activity.meta.taskTitle}" — ${when}`;
+    case 'project_updated':    return `${who} a modifié le projet — ${when}`;
+    case 'member_added':       return `${who} a ajouté un membre — ${when}`;
+    case 'member_removed':     return `${who} a retiré un membre — ${when}`;
+    default:                   return `${who} a effectué une action — ${when}`;
+  }
+};
+
+const loadActivities = async () => {
+  try {
+    const res  = await axios.get(API_URL + "/projects/" + projetId + "/activities", {
+      headers: { Authorization: "Bearer " + token }
+    });
+    const feed = document.getElementById("activity-feed");
+    if (!res.data.length) {
+      feed.innerHTML = '<p class="no-activity">Aucune activité pour ce projet.</p>';
+      return;
+    }
+    feed.innerHTML = res.data
+      .map(a => `<div class="activity-item">${formatActivity(a)}</div>`)
+      .join('');
+  } catch (err) {
+    console.error("Erreur chargement activités:", err);
+  }
+};
+
+
 if (projetId) {
   loadMembers();
   loadTasks();
+  loadActivities();
 }
