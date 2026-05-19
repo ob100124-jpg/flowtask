@@ -1,4 +1,5 @@
 const Project = require('../models/Project');
+const User = require('../models/User'); // ✅ AJOUT
 
 // GET /api/projects
 exports.getAllProjects = async (req, res) => {
@@ -66,6 +67,7 @@ exports.deleteProject = async (req, res) => {
   }
 };
 
+// GET MEMBERS
 const getProjectMembers = async (req, res) => {
   try {
     const project = await Project.findById(req.params.id)
@@ -76,3 +78,78 @@ const getProjectMembers = async (req, res) => {
   }
 };
 exports.getProjectMembers = getProjectMembers;
+
+//
+// ==================== 🔥 AJOUT FONCTIONNALITÉ 8 ====================
+//
+
+// INVITER MEMBRE PAR EMAIL
+exports.inviteMemberByEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const project = await Project.findOne({
+      _id: req.params.id,
+      createur: req.user.id
+    });
+
+    if (!project) {
+      return res.status(403).json({
+        message: "Seul le créateur peut inviter"
+      });
+    }
+
+    const userToInvite = await User.findOne({ email });
+
+    if (!userToInvite) {
+      return res.status(404).json({
+        message: "Utilisateur introuvable"
+      });
+    }
+
+    const alreadyMember = project.members.some(
+      id => id.toString() === userToInvite._id.toString()
+    );
+
+    if (alreadyMember) {
+      return res.status(400).json({
+        message: "Déjà membre"
+      });
+    }
+
+    project.members.push(userToInvite._id);
+    await project.save();
+
+    res.json({ message: "Membre ajouté avec succès" });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// SUPPRIMER MEMBRE
+exports.removeProjectMember = async (req, res) => {
+  try {
+    const project = await Project.findOne({
+      _id: req.params.id,
+      createur: req.user.id
+    });
+
+    if (!project) {
+      return res.status(403).json({
+        message: "Seul le créateur peut supprimer"
+      });
+    }
+
+    project.members = project.members.filter(
+      id => id.toString() !== req.params.memberId
+    );
+
+    await project.save();
+
+    res.json({ message: "Membre supprimé" });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
