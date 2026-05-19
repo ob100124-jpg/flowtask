@@ -4,7 +4,13 @@ const User = require('../models/User'); // ✅ AJOUT
 // GET /api/projects
 exports.getAllProjects = async (req, res) => {
   try {
-    const projects = await Project.find({ createur: req.user.id });
+    const projects = await Project.find({
+      $or: [
+        { createur: req.user.id },
+        { members: req.user.id }
+      ]
+    });
+
     res.json(projects);
   } catch (err) {
     res.status(500).json({ message: err.message });
