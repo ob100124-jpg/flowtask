@@ -18,6 +18,7 @@ router.put('/:id', auth, validateTask, updateTask);
 router.delete('/:id', auth, deleteTask);
 router.patch('/:id/status', auth, updateTaskStatus);
 router.get('/my-tasks', auth, getMyTasks);
-router.put('/:id/assign', auth, assignTask);
+router.put('/:id/assign',   auth, assignTask);
+router.patch('/:id/assign', auth, assignTask);
 
 module.exports = router;

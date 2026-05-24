@@ -134,3 +134,87 @@ input, select {
   color: #888;
   font-style: italic;
 }
+
+/* ── Feature 8 — Membres ── */
+
+.btn-membres {
+    background-color: #7C3AED; color: white;
+    width: auto; padding: 8px 16px; font-size: 14px;
+    border: none; border-radius: 4px; cursor: pointer;
+}
+.btn-membres:hover { background-color: #6D28D9; }
+
+.membres-panel {
+    background: white; padding: 20px; border-radius: 8px;
+    margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-left: 4px solid #7C3AED;
+}
+.membres-panel h2 { margin-bottom: 14px; color: #333; font-size: 16px; }
+
+.membres-invite { display: flex; gap: 10px; margin-bottom: 10px; }
+.membres-invite input { flex: 1; margin: 0; }
+
+.btn-inviter {
+    background-color: #7C3AED; color: white; padding: 10px 18px;
+    border: none; border-radius: 4px; cursor: pointer; font-size: 14px;
+    white-space: nowrap; font-weight: 600;
+}
+.btn-inviter:hover { background-color: #6D28D9; }
+.btn-inviter:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.membres-alert {
+    padding: 8px 12px; border-radius: 4px;
+    font-size: 13px; margin-bottom: 10px;
+}
+.membres-alert-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+.membres-alert-error   { background: #fdecea; color: #c62828; border: 1px solid #ef9a9a; }
+
+.membres-loading { color: #999; font-style: italic; font-size: 14px; padding: 8px 0; }
+.membres-empty   { color: #999; font-style: italic; font-size: 14px; padding: 8px 0; }
+
+.membre-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid #f0f0f0;
+    flex-wrap: wrap;
+}
+.membre-row:last-child { border-bottom: none; }
+
+.membre-name  { font-weight: 600; font-size: 14px; color: #222; min-width: 120px; }
+.membre-email { font-size: 13px; color: #666; flex: 1; }
+
+.membre-badge {
+    font-size: 11px; font-weight: 700; padding: 3px 10px;
+    border-radius: 12px; text-transform: uppercase; letter-spacing: 0.03em;
+}
+.badge-owner  { background: #ede9fe; color: #5b21b6; }
+.badge-member { background: #e8f5e9; color: #2e7d32; }
+
+.btn-retirer {
+    background: none; border: 1px solid #ddd; color: #999;
+    padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;
+}
+.btn-retirer:hover { border-color: #f44336; color: #f44336; background: #fdecea; }
+
+/* ── Per-card assign row ── */
+.task-assign-row {
+    display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: 16px;
+}
+.task-member-select {
+    width: 160px; padding: 7px 10px; margin: 0;
+    border: 1px solid #ddd; border-radius: 4px; font-size: 13px;
+}
+
+/* ── Status buttons ── */
+.task-actions { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; flex-shrink: 0; margin-left: 16px; }
+.task-status-row { display: flex; gap: 6px; }
+
+.btn-status {
+    padding: 6px 14px; border: none; border-radius: 20px;
+    font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.btn-encours  { background: #fff8e1; color: #f57f17; border: 1px solid #FFB300; }
+.btn-encours:hover, .btn-encours.active { background: #FFB300; color: white; }
+.btn-termine  { background: #e8f5e9; color: #2e7d32; border: 1px solid #4CAF50; }
+.btn-termine:hover { background: #4CAF50; color: white; }
+.btn-reopen   { background: #fdecea; color: #c62828; border: 1px solid #f44336; }
+.btn-reopen:hover { background: #f44336; color: white; }

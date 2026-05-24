@@ -11,8 +11,24 @@
     <div class="top-buttons">
         <button onclick="window.location.href='../projects/projects.html'">Projets</button>
         <button onclick="window.location.href='../dashboard/dashboard.html'">Dashboard</button>
+        <button class="btn-membres" onclick="toggleMembresPanel()">&#128101; Membres</button>
     </div>
     <div class="container">
+
+         <!-- Panel membres — Feature 8 -->
+        <div class="membres-panel" id="membres-panel" style="display:none;">
+            <h2>Gestion des membres</h2>
+ 
+            <!-- Invite -->
+            <div class="membres-invite">
+                <input type="email" id="membre-email" placeholder="Email du membre a inviter..." />
+                <button class="btn-inviter" onclick="inviteMember()">Inviter</button>
+            </div>
+            <div id="membres-alert" class="membres-alert" style="display:none;"></div>
+ 
+            <!-- Liste -->
+            <div id="membres-list"><p class="membres-loading">Chargement...</p></div>
+        </div>
 
         <!-- Formulaire création task -->
         <div class="form-section">
