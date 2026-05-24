@@ -2,8 +2,19 @@
 
 > **Module:** JavaScript · Express · MongoDB · Docker · GitHub  
 > **Deadline:** 20 May 2026  
- 
 
+---
+
+## 👥 Team
+
+| Name | GitHub | Features |
+|------|--------|---------|
+| **BAIDA Omar 19038330** | BAIDA Omar | Feature 1 — Authentication, Feature 2 — Projects, Feature 6 — Filter & Search, Feature 9 — Activity Log, Feature 10 — Notifications |
+| **BIKRANI Mohamed Ali 22053915** | MedAli_Bikrani | Feature 7 — Draft Save, Feature 8 — Members Management |
+| **Ben Moussa Roudani Imran 24056987** | Imran-a11yfd
+ | Feature 3 — Tasks, Feature 4 — Assignment, Feature 5 — Dashboard |
+
+---
 
 ## 📖 About the Project
 
@@ -12,18 +23,18 @@ Users can create projects, manage tasks, assign team members, and track activity
 
 ### Key Features
 
-| # | Feature | Description |
-|---|---------|-------------|
-| 1 | 🔐 Authentication | Register / Login with JWT + bcrypt |
-| 2 | 📁 Projects | Create, edit, delete projects with pagination |
-| 3 | ✅ Tasks | Full CRUD with priority & status validation |
-| 4 | 👤 Assignment | Assign tasks to team members |
-| 5 | 📊 Dashboard | Personal stats via MongoDB aggregation |
-| 6 | 🔍 Filter & Search | Filter by status, priority, member + keyword search |
-| 7 | 💾 Draft Save | Auto-save form data to localStorage |
-| 8 | 👥 Members | Invite/remove members by email |
-| 9 | 📜 Activity Log | Chronological history of all project actions |
-| 10 | 🔔 Notifications | Client-side polling + badge + localStorage archive |
+| # | Feature | Description | Author |
+|---|---------|-------------|--------|
+| 1 | 🔐 Authentication | Register / Login with JWT + bcrypt | Omar |
+| 2 | 📁 Projects | Create, edit, delete projects with pagination | Omar |
+| 3 | ✅ Tasks | Full CRUD with priority & status validation | Imran |
+| 4 | 👤 Assignment | Assign tasks to team members | Imran |
+| 5 | 📊 Dashboard | Personal stats via MongoDB aggregation | Imran |
+| 6 | 🔍 Filter & Search | Filter by status, priority, member + keyword search | Omar |
+| 7 | 💾 Draft Save | Auto-save form data to localStorage | Ali |
+| 8 | 👥 Members | Invite/remove members by email | Ali |
+| 9 | 📜 Activity Log | Chronological history of all project actions | Omar |
+| 10 | 🔔 Notifications | Client-side polling + badge + localStorage archive | Omar |
 
 ---
 
@@ -82,18 +93,35 @@ taskflow/
 │       │   ├── activities.js
 │       │   └── notifications.js
 │       └── middlewares/
-│           ├── authMiddleware.js   # Verifies JWT on protected routes
-│           └── validate.js         # Input validation
+│           ├── auth.js         # Verifies JWT on protected routes
+│           └── validate.js     # Input validation
 │
 └── frontend/
     ├── Dockerfile
     ├── index.html
     ├── main.js
     └── src/
-        ├── components/
-        ├── pages/
-        └── services/
-            └── api.js              # Axios instance with JWT header
+        └── pages/
+            ├── login/
+            │   ├── login.html
+            │   ├── login.css
+            │   └── login.js
+            ├── dashboard/
+            │   ├── dashboard.html
+            │   ├── dashboard.css
+            │   └── dashboard.js
+            ├── projects/
+            │   ├── projects.html
+            │   ├── projects.css
+            │   └── projects.js
+            ├── tasks/
+            │   ├── tasks.html
+            │   ├── tasks.css
+            │   └── tasks.js
+            └── notifications/
+                ├── notifications.html
+                ├── notifications.css
+                └── notifications-client.js
 ```
 
 ---
@@ -184,20 +212,20 @@ git push -u origin feature/your-feature-name
 
 ## 🌲 Branch Strategy
 
-| Branch | Purpose |
-|--------|---------|
-| `main` | Stable releases only — never commit directly |
-| `develop` | Integration — merge all features here |
-| `feature/authentification` | Feature 1 |
-| `feature/projets` | Feature 2 |
-| `feature/taches` | Feature 3 |
-| `feature/assignation` | Feature 4 |
-| `feature/dashboard` | Feature 5 |
-| `feature/filtrage` | Feature 6 |
-| `feature/brouillons` | Feature 7 |
-| `feature/membres` | Feature 8 |
-| `feature/activites` | Feature 9 |
-| `feature/notifications` | Feature 10 |
+| Branch | Purpose | Author |
+|--------|---------|--------|
+| `main` | Stable releases only — never commit directly | — |
+| `develop` | Integration — merge all features here | — |
+| `feature/authentification` | Feature 1 — Authentication | Omar |
+| `feature/projets` | Feature 2 — Projects | Omar |
+| `feature/taches` | Feature 3 — Tasks | Imran |
+| `feature/assignation` | Feature 4 — Assignment | Imran |
+| `feature/dashboard` | Feature 5 — Dashboard | Imran |
+| `feature/filtrage` | Feature 6 — Filter & Search | Omar |
+| `feature/brouillons` | Feature 7 — Draft Save | Ali |
+| `feature/membres` | Feature 8 — Members | Ali |
+| `feature/activites` | Feature 9 — Activity Log | Omar |
+| `feature/notifications` | Feature 10 — Notifications | Omar |
 
 ---
 
@@ -257,10 +285,13 @@ Authorization: Bearer <your_jwt_token>
 
 | Method | Route | Description |
 |--------|-------|-------------|
-| GET | `/api/projects?page=1&limit=10` | List projects (paginated) |
+| GET | `/api/projects` | List projects |
 | POST | `/api/projects` | Create project |
 | PUT | `/api/projects/:id` | Update project |
 | DELETE | `/api/projects/:id` | Delete project + cascade tasks |
+| GET | `/api/projects/:id/members` | List project members |
+| POST | `/api/projects/:id/members` | Invite member by email |
+| DELETE | `/api/projects/:id/members/:memberId` | Remove member |
 
 ### Tasks
 
@@ -271,6 +302,7 @@ Authorization: Bearer <your_jwt_token>
 | PUT | `/api/tasks/:id` | Update task |
 | DELETE | `/api/tasks/:id` | Delete task |
 | PATCH | `/api/tasks/:id/status` | Update status only |
+| PATCH | `/api/tasks/:id/assign` | Assign task to member |
 
 ### Dashboard & More
 
@@ -278,7 +310,7 @@ Authorization: Bearer <your_jwt_token>
 |--------|-------|-------------|
 | GET | `/api/dashboard` | Personal stats (aggregation) |
 | GET | `/api/projects/:id/activities` | Activity feed |
-| GET | `/api/notifications` | Unread notifications |
+| GET | `/api/notifications` | All notifications |
 | PATCH | `/api/notifications/:id/read` | Mark notification as read |
 
 ---
