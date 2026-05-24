@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Notifications — TaskFlow</title>
+  <link rel="stylesheet" href="notifications.css"/>
+</head>
+<body>
+
+  <div class="top-buttons">
+    <button onclick="location.href='../projects/projects.html'">Projets</button>
+    <button onclick="location.href='../dashboard/dashboard.html'">Dashboard</button>
+    <button id="btn-logout">Déconnexion</button>
+  </div>
+
+  <div class="container">
+    <div class="notif-header">
+      <h1>🔔 Notifications</h1>
+      <button class="btn-mark-all" id="btn-mark-all">Tout marquer lu</button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="all">Toutes</button>
+      <button class="tab" data-tab="unread">Non lues</button>
+      <button class="tab" data-tab="archived">Archivées</button>
+    </div>
+
+    <div id="notif-list">Chargement...</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    const API_URL   = 'http://localhost:5000/api';
+    const NOTIF_KEY = 'notif_archived';
+    const token     = localStorage.getItem('token');
+    if (!token) location.href = '../login/login.html';
+
+    let liveNotifs = [];
+    let currentTab = 'all';
+
+    document.getElementById('btn-logout').addEventListener('click', () => {
+      localStorage.removeItem('token');
+      location.href = '../login/login.html';
+    });
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentTab = tab.dataset.tab;
+        render();
+      });
+    });
+
+    document.getElementById('btn-mark-all').addEventListener('click', async () => {
+      const unread = liveNotifs.filter(n => !n.read);
+      await Promise.allSettled(unread.map(n => markRead(n._id)));
+      await fetchNotifs();
+    });
+
+    const fetchNotifs = async () => {
+      try {
+        const res = await axios.get(API_URL + '/notifications', {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        liveNotifs = res.data;
+        liveNotifs.filter(n => n.read).forEach(archiveNotif);
+        render();
+      } catch (err) {
+        document.getElementById('notif-list').innerHTML =
+          '<p class="no-notif">Impossible de charger les notifications.</p>';
+      }
+    };
+
+    const markRead = async (id) => {
+      try {
+        await axios.patch(API_URL + '/notifications/' + id + '/read', {}, {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        const n = liveNotifs.find(x => x._id === id);
+        if (n) { n.read = true; archiveNotif(n); }
+        render();
+      } catch (err) {
+        console.error('markRead error:', err.message);
+      }
+    };
+
+    const archiveNotif = (n) => {
+      const archived = JSON.parse(localStorage.getItem(NOTIF_KEY) || '[]');
+      if (!archived.find(a => a._id === n._id)) {
+        archived.unshift({ ...n, archivedAt: Date.now() });
+        if (archived.length > 100) archived.pop();
+        localStorage.setItem(NOTIF_KEY, JSON.stringify(archived));
+      }
+    };
+
+    const render = () => {
+      const container = document.getElementById('notif-list');
+      let items = [];
+
+      if (currentTab === 'all')         items = liveNotifs;
+      else if (currentTab === 'unread') items = liveNotifs.filter(n => !n.read);
+      else                              items = JSON.parse(localStorage.getItem(NOTIF_KEY) || '[]');
+
+      if (!items.length) {
+        container.innerHTML = '<p class="no-notif">Aucune notification.</p>';
+        return;
+      }
+
+      container.innerHTML = items.map(n => `
+        <div class="notif-item ${n.read ? '' : 'unread'}" data-id="${n._id}"
+             onclick="if(!${n.read}) markRead('${n._id}')">
+          <span class="notif-icon">${typeIcon(n.type)}</span>
+          <div class="notif-body">
+            <p class="notif-message">${n.message}</p>
+            <p class="notif-time">${formatTime(n.createdAt || n.archivedAt)}</p>
+          </div>
+          ${!n.read ? '<span class="unread-dot"></span>' : ''}
+        </div>
+      `).join('');
+    };
+
+    const typeIcon = (type) => {
+      const map = { task_assigned: '🎯', task_status_changed: '🔄', member_added: '👤', member_removed: '🚪' };
+      return map[type] || '🔔';
+    };
+
+    const formatTime = (ts) => {
+      if (!ts) return '';
+      const diff = Date.now() - new Date(ts).getTime();
+      const m = Math.floor(diff / 60000);
+      if (m < 1)  return "à l'instant";
+      if (m < 60) return `il y a ${m} min`;
+      const h = Math.floor(m / 60);
+      if (h < 24) return `il y a ${h}h`;
+      return `il y a ${Math.floor(h / 24)}j`;
+    };
+
+    fetchNotifs();
+    setInterval(fetchNotifs, 30000);
+  </script>
+</body>
+</html>

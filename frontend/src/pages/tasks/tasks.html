@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taches</title>
+    <link rel="stylesheet" href="tasks.css">
+</head>
+<body>
+    <h1>Gestion des Taches</h1>
+    <div class="top-buttons">
+        <button onclick="window.location.href='../projects/projects.html'">Projets</button>
+        <button onclick="window.location.href='../dashboard/dashboard.html'">Dashboard</button>
+        <button class="btn-membres" onclick="toggleMembresPanel()">&#128101; Membres</button>
+    </div>
+    <button onclick="location.href='../notification/notifications.html'">
+  🔔 <span id="notif-badge" style="display:none; background:#f44336; color:#fff;
+             border-radius:50%; padding:1px 6px; font-size:11px; font-weight:700;">0</span>
+    </button>
+    <div class="container">
+
+         <!-- Panel membres — Feature 8 -->
+        <div class="membres-panel" id="membres-panel" style="display:none;">
+            <h2>Gestion des membres</h2>
+ 
+            <!-- Invite -->
+            <div class="membres-invite">
+                <input type="email" id="membre-email" placeholder="Email du membre a inviter..." />
+                <button class="btn-inviter" onclick="inviteMember()">Inviter</button>
+            </div>
+            <div id="membres-alert" class="membres-alert" style="display:none;"></div>
+ 
+            <!-- Liste -->
+            <div id="membres-list"><p class="membres-loading">Chargement...</p></div>
+        </div>
+
+        <!-- Formulaire création task -->
+        <div class="form-section">
+            <h2>Nouvelle Tache</h2>
+            <input type="text" id="titre" placeholder="Titre de la tache" required>
+            <select id="priorite">
+                <option value="basse">Basse</option>
+                <option value="moyenne">Moyenne</option>
+                <option value="haute">Haute</option>
+            </select>
+
+            <!-- Menu déroulant membres -->
+            <select id="assignedTo">
+                <option value="">Assigner a un membre...</option>
+            </select>
+            <button class="btn-create" onclick="createTask()">Creer la tache</button>
+        </div>
+        
+        <div class="filter-section">
+            <h2>Filtrer les taches</h2>
+            <div class="filter-row">
+                <input type="text" id="search-input" placeholder="Rechercher par titre ou description..." class="filter-search" />
+                <select id="filter-statut">
+                    <option value="">Tous les statuts</option>
+                    <option value="a faire">A faire</option>
+                    <option value="en cours">En cours</option>
+                    <option value="termine">Termine</option>
+                </select>
+                <select id="filter-priorite">
+                    <option value="">Toutes priorites</option>
+                    <option value="basse">Basse</option>
+                    <option value="moyenne">Moyenne</option>
+                    <option value="haute">Haute</option>
+                </select>
+                <select id="filter-assignedTo">
+                    <option value="">Tous les membres</option>
+                </select>
+            </div>
+            <div class="filter-buttons">
+                <button class="btn-apply" onclick="applyFilters()">Appliquer</button>
+                <button class="btn-reset" onclick="resetFilters()">Reinitialiser</button>
+            </div>
+        </div>
+
+        <!-- Liste des tâches -->
+        <div id="tasks-list"></div>
+        <div class="pagination">
+            <button class="btn-page" id="prev-page" onclick="prevPage()" disabled>Precedent</button>
+            <span id="page-info">Page 1</span>
+            <button class="btn-page" id="next-page" onclick="nextPage()">Suivant</button>
+        </div>
+
+        <!-- Fil d'activité — Feature 9 -->
+        <div class="activity-section">
+            <h2>Fil d'activite</h2>
+            <div id="activity-feed">Chargement...</div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="tasks.js"></script>
+    <script src="../notification/notifications-client.js"></script>
+</body>
+</html>
