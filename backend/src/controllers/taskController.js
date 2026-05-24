@@ -1,6 +1,7 @@
 const Task = require('../models/Task');
 const Project = require('../models/Project'); // ✅ AJOUT
 const { logActivity } = require('./activityController');
+const { createNotification } = require('./notificationController');
 
 // ✅ AJOUT - vérifier accès projet
 const getProjectAccess = async (projectId, userId) => {
@@ -239,6 +240,14 @@ const assignTask = async (req, res) => {
 
     await logActivity('task_assigned', task.projet, req.user.id, { taskTitle: task.titre });
 
+    if (req.body.userId) {
+      await createNotification(
+        'task_assigned',
+        req.body.userId,
+        task.projet,
+        `Vous avez été assigné à la tâche "${task.titre}"`
+      );
+    }
     res.json(task);
   } catch (err) {
     res.status(400).json({ message: err.message });
