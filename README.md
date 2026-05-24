@@ -11,8 +11,7 @@
 |------|--------|---------|
 | **BAIDA Omar 19038330** | BAIDA Omar | Feature 1 — Authentication, Feature 2 — Projects, Feature 6 — Filter & Search, Feature 9 — Activity Log, Feature 10 — Notifications |
 | **BIKRANI Mohamed Ali 22053915** | MedAli_Bikrani | Feature 7 — Draft Save, Feature 8 — Members Management |
-| **Ben Moussa Roudani Imran 24056987** | Imran-a11yfd
- | Feature 3 — Tasks, Feature 4 — Assignment, Feature 5 — Dashboard |
+| **Ben Moussa Roudani Imran 24056987** | Imran-a11yfd | Feature 3 — Tasks, Feature 4 — Assignment, Feature 5 — Dashboard |
 
 ---
 
